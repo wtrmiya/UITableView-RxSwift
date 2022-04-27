@@ -18,7 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        let vc = UIStoryboard(name: "<#StoryboardName#>", bundle: nil).instantiateInitialViewController() as! <#ViewControllerName#>
 //        let navigationController = UINavigationController(rootViewController: vc)
 //        self.window?.rootViewController = navigationController
-        self.window?.rootViewController = TableViewController()
+//        self.window?.rootViewController = TableViewController()
+        self.window?.rootViewController = CollectionViewController()
         self.window?.makeKeyAndVisible()
         return true
     }
