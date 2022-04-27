@@ -18,8 +18,6 @@ final class TableViewController:UIViewController {
         return tableView
     }()
     
-    private var months = ["January", "February", "March"]
-    
     private let bag = DisposeBag()
     
     override func viewDidLoad() {
@@ -37,15 +35,15 @@ private extension TableViewController {
         tableView.snp.makeConstraints({ make in
             make.edges.equalToSuperview()
         })
-//        tableView.dataSource = self
     }
     
     func bindTableView() {
-        // まず、初期データをObservableにして
+        // まず、初期データをObservableにしておく。
+        // ViewControllerクラスのプロパティにしなくとも良い、
         let months = Observable.of(["January", "February", "March"])
         
         months
-            .bind(to: tableView.rx.items) { // UITableView.rx.itemsにbindする。
+            .bind(to: tableView.rx.items) { // データ用ObservableをUITableView.rx.itemsにbindする。
                 (tableView: UITableView, index: Int, element: String) in
                 // IndexPathは自作する必要がある。
                 let indexPath = IndexPath(item: index, section: 0)
@@ -54,24 +52,13 @@ private extension TableViewController {
                 return cell
             }
             .disposed(by: bag)
+        
+        tableView.rx
+            .modelSelected(String.self)
+            .subscribe(onNext: { model in
+                print("\(model) was selected")
+            })
+            .disposed(by: bag)
     }
 }
 
-//extension TableViewController: UITableViewDataSource {
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return months.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        guard let cell = tableView.dequeueReusableCell(withIdentifier: MyCell.identifier, for: indexPath) as? MyCell
-//        else { return UITableViewCell() }
-//
-//        cell.configure(title: months[indexPath.row])
-//
-//        return cell
-//    }
-//}
